@@ -44,7 +44,7 @@ The provided template and helper properties, like *upstream_node_name*, *downstr
 
 .. note::
     Edge nodes, like Alice and David, have one neighbor only,
-    so either upstream or downstream are not applicable.
+    so for Alice downstream is not applicable and for David upstream is not applicable.
     The associated upstream or downstream properties like *up_socket* or *down_socket* will be *None* in that case.
 
 .. note::
