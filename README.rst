@@ -76,9 +76,10 @@ Goal 5: Completing the challenge
 To complete the challenge:
 
 1) Configure a Noisy Network:
-   Modify `config.yaml` to match the **noisy network configuration** settings as described below.
+    *  Modify `config.yaml` to match the **noisy network configuration** settings as described below.
 2) Complete the `run_simulation.py` script.
-    * Update `run_simulation.py` to execute the application in the noisy network both **with** and **without** error correction.
+    * Update `run_simulation.py`
+      Execute the application in the noisy network both **with** and **without** error correction.
     * For each configuration:
         * Run the simulation at least 100 times to create reliable results.
         * Calculate and print **Average Success Probability** and **Average Transmission Speed**.
@@ -89,7 +90,9 @@ To complete the challenge:
 
 Noisy Network configuration
 ----------------------------
-* Nodes: 4-node linear network, each node spaced 10 km apart.
+* Nodes:
+    * 4-node linear network.
+    * Each node spaced 10 km apart.
 * Classical Communication:
     * Model: default (to simulate communication delay).
     * Speed: 200,000 km/s in fiber.
