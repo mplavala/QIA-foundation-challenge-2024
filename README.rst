@@ -15,9 +15,9 @@ Repository Contents
 ======================
 This repository provides a starting template for the solution code, including:
 
-* `application.py`: A template for the anonymous broadcasting application, with an initialized setup and helper methods.
-* `config.yaml`: Configuration for a basic 4-node network (without noise).
-* `run_simulation.py`: A script to run and test the application.
+* *application.py*: A template for the anonymous broadcasting application, with an initialized setup and helper methods.
+* *config.yaml*: Configuration for a basic 4-node network (without noise).
+* *run_simulation.py*: A script to run and test the application.
 
 Challenge
 ------------
@@ -31,11 +31,11 @@ Goal 1: Implement the Anonymous Bit Transmission Protocol
 The first task is to implement the protocol for **anonymous transmission of a classical bit**.
 The protocol is described in the `Quantum Anonymous Transmissions paper <https://arxiv.org/pdf/quant-ph/0409201>`_ (see page 10).
 
-For convenience, an image with the protocol definition, `anonymous transmission classical bit.png` is included in this repository.
-In this protocol, `d` represents the bit being transmitted anonymously.
+For convenience, an image with the protocol definition, *anonymous transmission classical bit.png* is included in this repository.
+In this protocol, *d* represents the bit being transmitted anonymously.
 
-To complete this goal, implement the protocol in the `anonymous_transmit_bit` method within `application.py`.
-The provided template and helper properties, like `upstream_node_name`, `downstream_node_name`, `up_socket`, etc., that will assist you.
+To complete this goal, implement the protocol in the *anonymous_transmit_bit* method within *application.py*.
+The provided template and helper properties, like *upstream_node_name*, *downstream_node_name*, *up_socket*, etc., that will assist you.
 
 
 .. note:
@@ -45,7 +45,7 @@ The provided template and helper properties, like `upstream_node_name`, `downstr
 .. note:
     Edge nodes, like Alice and David, have one neighbor only,
     so either upstream or downstream are not applicable.
-    The associated upstream or downstream properties like `up_socket` or `down_socket` will be `None` in that case.
+    The associated upstream or downstream properties like *up_socket* or *down_socket* will be *None* in that case.
 
 .. note:
     The protocol definition specifies aborting if any player doesn’t use the broadcast channel;
@@ -56,13 +56,13 @@ Goal 2: Transmit a Byte Anonymously
 Extend the application to transmit a byte (8 bits) anonymously. Additionally:
 
 * Record the time the application takes to complete.
-* In the `run` method, return both the received byte (or sent byte for the sender) and the completion time.
+* In the *run* method, return both the received byte (or sent byte for the sender) and the completion time.
 
 Goal 3: Measure Success Probability and Transmission Speed
 ==============================================================
 Now, calculate the **average success probability** and **transmission speed** in bytes per second.
 
-You can use the `num_times` parameter in the `run` method of `run_simulation.py` to run multiple simulations
+You can use the *num_times* parameter in the *run* method of *run_simulation.py* to run multiple simulations
 and gather data to compute these averages.
 
 Goal 4: Add Error Correction with Repetition Code
@@ -76,10 +76,10 @@ Goal 5: Completing the challenge
 To complete the challenge:
 
 1) Configure a Noisy Network:
-    *  Modify `config.yaml` to match the **noisy network configuration** settings as described below.
-2) Complete the `run_simulation.py` script.
-    * Update `run_simulation.py`
-        *Execute the application in the noisy network both **with** and **without** error correction.
+    *  Modify *config.yaml* to match the **noisy network configuration** settings as described below.
+2) Complete the *run_simulation.py* script.
+    * Update *run_simulation.py*
+        * Execute the application in the noisy network both **with** and **without** error correction.
     * For each configuration:
         * Run the simulation at least 100 times to create reliable results.
         * Calculate and print **Average Success Probability** and **Average Transmission Speed**.
@@ -109,8 +109,8 @@ Hints
 -----------
 
 * **SquidASM** provides implementations for `basic functionalities. <https://squidasm.readthedocs.io/en/latest/modules/routines.html>`_
-* Use `netsquid.sim_time()` to retrieve the current simulation time in nanoseconds.
-* Results from `squidasm.run.stack.run.run`  return as a nested structure:
+* Use *netsquid.sim_time()* to retrieve the current simulation time in nanoseconds.
+* Results from *squidasm.run.stack.run.run*  return as a nested structure:
     * The outer list groups results by node.
     * The inner list contains results per simulation run.
     * Each result is a dictionary, with data returned by the application, with the key names as user specified.
