@@ -79,7 +79,7 @@ To complete the challenge:
     *  Modify `config.yaml` to match the **noisy network configuration** settings as described below.
 2) Complete the `run_simulation.py` script.
     * Update `run_simulation.py`
-      Execute the application in the noisy network both **with** and **without** error correction.
+        *Execute the application in the noisy network both **with** and **without** error correction.
     * For each configuration:
         * Run the simulation at least 100 times to create reliable results.
         * Calculate and print **Average Success Probability** and **Average Transmission Speed**.
