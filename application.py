@@ -69,13 +69,13 @@ class AnonymousTransmissionProgram(Program):
         return False
 
     def broadcast_message(self, context: ProgramContext, message: str):
-        """Broadcasts a message to all nodes in the network except the sender."""
+        """Broadcasts a message to all nodes in the network."""
         for remote_node_name in self.remote_node_names:
             socket = context.csockets[remote_node_name]
             socket.send(message)
 
     def setup_up_and_downstream_sockets(self, context: ProgramContext):
-        """Initializes upstream and downstream socket properties using the given context."""
+        """Initializes upstream and downstream sockets using the given context."""
         if self.upstream_node_name:
             self.up_socket = context.csockets[self.upstream_node_name]
             self.up_epr_socket = context.epr_sockets[self.upstream_node_name]
