@@ -32,7 +32,7 @@ The first task is to implement the protocol for **anonymous transmission of a cl
 The protocol is described in the `Quantum Anonymous Transmissions paper <https://arxiv.org/pdf/quant-ph/0409201>`_ (see page 10).
 
 For convenience, an image with the protocol definition, `anonymous transmission classical bit.png` is included in this repository.
-In this protocol `d` represents the bit being transmitted anonymously.
+In this protocol, `d` represents the bit being transmitted anonymously.
 
 To complete this goal, implement the protocol in the `anonymous_transmit_bit` method within `application.py`.
 The provided template and helper properties, like `upstream_node_name`, `downstream_node_name`, `up_socket`, etc., that will assist you.
@@ -60,7 +60,7 @@ Extend the application to transmit a byte (8 bits) anonymously. Additionally:
 
 Goal 3: Measure Success Probability and Transmission Speed
 ==============================================================
-Now, calculate the average success probability and **transmission speed** in bytes per second.
+Now, calculate the **average success probability** and **transmission speed** in bytes per second.
 
 You can use the `num_times` parameter in the `run` method of `run_simulation.py` to run multiple simulations
 and gather data to compute these averages.
@@ -74,8 +74,9 @@ Add an option to enable error correction in your application and apply the repet
 Goal 5: Completing the challenge
 ===================================
 To complete the challenge:
+
 1) Configure a Noisy Network:
-    Modify `config.yaml` to match the **noisy network configuration** settings as described below.
+   Modify `config.yaml` to match the **noisy network configuration** settings as described below.
 2) Complete the `run_simulation.py` script.
     * Update `run_simulation.py` to execute the application in the noisy network both **with** and **without** error correction.
     * For each configuration:
@@ -84,7 +85,7 @@ To complete the challenge:
 3) Submit your solution
     * Create a GitHub repository containing all necessary files to run your solution script.
     * Register for the QIA Foundation Challenge (if you haven’t already).
-    * Send the link to your GitHub repository to <info@quantuminternetalliance.org>_.
+    * Email the link to your GitHub repository to info@quantuminternetalliance.org.
 
 Noisy Network configuration
 ----------------------------
@@ -110,5 +111,4 @@ Hints
     * The outer list groups results by node.
     * The inner list contains results per simulation run.
     * Each result is a dictionary, with data returned by the application, with the key names as user specified.
-* Network configurations can be generated programmatically using SquidASM’s utility methods.
-   Check the `API <https://squidasm.readthedocs.io/en/latest/modules/util.html>`_ for more information.
+* Network configurations can be generated programmatically using SquidASM’s utility methods. Check the `API <https://squidasm.readthedocs.io/en/latest/modules/util.html>`_ for more information.
