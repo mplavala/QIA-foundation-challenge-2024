@@ -98,10 +98,10 @@ Noisy Network configuration
     * Speed: 200,000 km/s in fiber.
 * Entanglement Generation:
     * Model: depolarise
-    * fidelity: 0.95.
-    * Success Probability: 5% per attempt.
+    * fidelity: 0.97.
+    * Success Probability: 20% per attempt.
 * Quantum Device:
-    * Model: generic with a 0.5 ms coherence time.
+    * Model: generic with a 0.5 s coherence time.
     * Gate Operations: 10 μs per operation, with a 0.5% depolarizing error for both single and two-qubit gates.
 
 

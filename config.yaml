@@ -7,10 +7,10 @@ perfect_qdevice_cfg: &perfect_qdevice_cfg
     T2: 0
 
     # gate execution times
-    init_time: 10
-    single_qubit_gate_time: 10
-    two_qubit_gate_time: 10
-    measure_time: 10
+    init_time: 0
+    single_qubit_gate_time: 0
+    two_qubit_gate_time: 0
+    measure_time: 0
 
     # noise model
     single_qubit_gate_depolar_prob: 0.
