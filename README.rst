@@ -38,16 +38,16 @@ To complete this goal, implement the protocol in the *anonymous_transmit_bit* me
 The provided template and helper properties, like *upstream_node_name*, *downstream_node_name*, *up_socket*, etc., that will assist you.
 
 
-.. note:
+.. note::
     "Upstream" refers to the next node in sequence. For example, for Bob, Charlie is upstream.
     "Downstream" refers to the previous node in sequence. For example for Charlie, Bob is downstream.
 
-.. note:
+.. note::
     Edge nodes, like Alice and David, have one neighbor only,
     so either upstream or downstream are not applicable.
     The associated upstream or downstream properties like *up_socket* or *down_socket* will be *None* in that case.
 
-.. note:
+.. note::
     The protocol definition specifies aborting if any player doesn’t use the broadcast channel;
     however, implementing this feature is outside the scope of this challenge.
 
