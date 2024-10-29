@@ -35,17 +35,17 @@ For convenience, an image with the protocol definition, *anonymous transmission 
 In this protocol, *d* represents the bit being transmitted anonymously.
 
 To complete this goal, implement the protocol in the *anonymous_transmit_bit* method within *application.py*.
-The provided template and helper properties, like *upstream_node_name*, *downstream_node_name*, *up_socket*, etc., that will assist you.
+The provided template and helper properties, like *up_node_name*, *down_node_name*, *up_socket*, etc., that will assist you.
 
 
 .. note::
-    "Upstream" refers to the next node in sequence. For example, for Bob, Charlie is upstream.
-    "Downstream" refers to the previous node in sequence. For example for Charlie, Bob is downstream.
+    "up" refers to the next node in sequence. For example, for Bob, Charlie is up.
+    "down" refers to the previous node in sequence. For example for Charlie, Bob is down.
 
 .. note::
     Edge nodes, like Alice and David, have one neighbor only,
-    so for Alice downstream is not applicable and for David upstream is not applicable.
-    The associated upstream or downstream properties like *up_socket* or *down_socket* will be *None* in that case.
+    so for Alice "down" is not applicable and for David "up" is not applicable.
+    The associated up or down properties like *up_socket* or *down_socket* will be *None* in that case.
 
 .. note::
     The protocol definition specifies aborting if any player doesn’t use the broadcast channel;

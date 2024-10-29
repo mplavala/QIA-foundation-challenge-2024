@@ -18,16 +18,16 @@ class AnonymousTransmissionProgram(Program):
         self.node_name = node_name
         self.send_bit = send_bit
 
-        # Find what nodes are upstream and downstream based on the node_names list
+        # Find what nodes are up and down based on the node_names list
         node_index = node_names.index(node_name)
-        self.upstream_node_name = node_names[node_index+1] if node_index + 1 < len(node_names) else None
-        self.downstream_node_name = node_names[node_index-1] if node_index - 1 >= 0 else None
+        self.up_node_name = node_names[node_index+1] if node_index + 1 < len(node_names) else None
+        self.down_node_name = node_names[node_index-1] if node_index - 1 >= 0 else None
 
         # The remote nodes are all the nodes, but without current node. Copy the list to make the pop operation local
         self.remote_node_names = copy(node_names)
         self.remote_node_names.pop(node_index)
 
-        # Upstream and downstream sockets, will be fetched from the ProgramContext using setup_up_and_downstream_sockets
+        # up and down sockets, will be fetched from the ProgramContext using setup_up_and_down_sockets
         self.up_socket: Optional[Socket] = None
         self.up_epr_socket: Optional[EPRSocket] = None
         self.down_socket: Optional[Socket] = None
@@ -35,8 +35,8 @@ class AnonymousTransmissionProgram(Program):
 
     @property
     def meta(self) -> ProgramMeta:
-        # Filter upstream and downstream node name for None values
-        epr_node_names = [node for node in [self.upstream_node_name, self.downstream_node_name] if node is not None]
+        # Filter up and down node name for None values
+        epr_node_names = [node for node in [self.up_node_name, self.down_node_name] if node is not None]
 
         return ProgramMeta(
             name="anonymous_transmission_program",
@@ -46,8 +46,8 @@ class AnonymousTransmissionProgram(Program):
         )
 
     def run(self, context: ProgramContext):
-        # Initialize upstream and downstream sockets using the provided context
-        self.setup_up_and_downstream_sockets(context)
+        # Initialize up and down sockets using the provided context
+        self.setup_up_and_down_sockets(context)
 
         # Run the anonymous transmission protocol and retrieve the received bit
         received_bit = yield from self.anonymous_transmit_bit(context, self.send_bit)
@@ -74,11 +74,11 @@ class AnonymousTransmissionProgram(Program):
             socket = context.csockets[remote_node_name]
             socket.send(message)
 
-    def setup_up_and_downstream_sockets(self, context: ProgramContext):
-        """Initializes upstream and downstream sockets using the given context."""
-        if self.upstream_node_name:
-            self.up_socket = context.csockets[self.upstream_node_name]
-            self.up_epr_socket = context.epr_sockets[self.upstream_node_name]
-        if self.downstream_node_name:
-            self.down_socket = context.csockets[self.downstream_node_name]
-            self.down_epr_socket = context.epr_sockets[self.downstream_node_name]
+    def setup_up_and_down_sockets(self, context: ProgramContext):
+        """Initializes up and down sockets using the given context."""
+        if self.up_node_name:
+            self.up_socket = context.csockets[self.up_node_name]
+            self.up_epr_socket = context.epr_sockets[self.up_node_name]
+        if self.down_node_name:
+            self.down_socket = context.csockets[self.down_node_name]
+            self.down_epr_socket = context.epr_sockets[self.down_node_name]
