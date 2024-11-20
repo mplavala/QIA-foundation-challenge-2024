@@ -108,39 +108,17 @@ class AnonymousTransmissionProgram(Program):
 
         yield from context.connection.flush()
 
-        if self.node_name == "Alice":
-            self.next_socket.send(str(int(m)))
-            yield from context.connection.flush()
+        self.broadcast_message(context, str(int(m)))
 
-        if self.node_name in ["Bob", "Charlie"]:
-            m_prev = yield from self.prev_socket.recv()
-            yield from context.connection.flush()
-            self.next_socket.send(m_prev + str(int(m)))
-            yield from context.connection.flush()
+        yield from context.connection.flush()
 
-        if self.node_name == "David":
-            m_prev = yield from self.prev_socket.recv()
-            yield from context.connection.flush()
-            m_final = m_prev + str(int(m))
+        meas_string = str(int(m))
+        for remote_node_name in self.remote_node_names:
+            socket = context.csockets[remote_node_name]
+            msg = yield from socket.recv()
+            meas_string = meas_string + msg
 
-            sent_bit = hamming_weight(m_final) % 2
-
-            self.prev_socket.send(str(sent_bit) + ',' + m_final)
-            yield from context.connection.flush()
-
-        if self.node_name in ["Bob", "Charlie"]:
-            res = yield from self.next_socket.recv()
-            yield from context.connection.flush()
-            self.prev_socket.send(res)
-            yield from context.connection.flush()
-
-            sent_bit = int(res[0])
-
-        if self.node_name == "Alice":
-            res = yield from self.next_socket.recv()
-            yield from context.connection.flush()
-
-            sent_bit = send_bit
+        sent_bit = hamming_weight(meas_string) % 2
 
         return bool(sent_bit)
 

@@ -60,5 +60,6 @@ for node in results:
 
 # We only count bits transferred in rounds where WHOLE message was correct.
 # This is, of course, not the only way to do this but was not specified in the assignment.
+# In order to get transmission speed per bit set message length to 1.
 average_transmission_speed = math.floor(correct_transfer_counter * message_length / average_node_runtime)
 print(f"Average transmission speed = {average_transmission_speed} bits / sec.")
