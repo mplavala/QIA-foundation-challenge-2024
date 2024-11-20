@@ -11,7 +11,12 @@ from utils import hamming_weight
 
 
 class AnonymousTransmissionProgram(Program):
-    def __init__(self, node_name: str, node_names: list, message: str = None, message_length: int = 1, num_repetitions: int = 1):
+    def __init__(self,
+                 node_name: str,
+                 node_names: list,
+                 message: str = None,
+                 message_length: int = 1,
+                 num_repetitions: int = 1):
         """
         Initializes the AnonymousTransmissionProgram.
 
@@ -62,12 +67,13 @@ class AnonymousTransmissionProgram(Program):
                 send_bit = bool(int(self.message[i]))
             else:
                 send_bit = None
-            # Run the anonymous transmission protocol and retrieve the received bit
+            # Run the anonymous transmission protocol and retrieve the received bits
             received_bits = ""
             for ii in range(self.num_repetitions):
                 received_bit = yield from self.anonymous_transmit_bit(context, send_bit)
                 received_bits = received_bits + str(int(received_bit))
 
+            # Error correction
             if hamming_weight(received_bits) > self.num_repetitions / 2:
                 corrected_bit = 1
             else:
