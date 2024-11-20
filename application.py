@@ -2,12 +2,13 @@ from copy import copy
 from typing import Optional, Generator
 
 from squidasm.sim.stack.program import Program, ProgramContext, ProgramMeta
+from squidasm.util.routines import create_ghz
 from netqasm.sdk.classical_communication.socket import Socket
 from netqasm.sdk.epr_socket import EPRSocket
 
 
 class AnonymousTransmissionProgram(Program):
-    def __init__(self, node_name: str, node_names: list, send_bit: bool = None):
+    def __init__(self, node_name: str, node_names: list, message: str = None, message_length: int = 1):
         """
         Initializes the AnonymousTransmissionProgram.
 
@@ -16,7 +17,8 @@ class AnonymousTransmissionProgram(Program):
         :param send_bit: The bit to be transmitted; set to None for nodes that are not the sender.
         """
         self.node_name = node_name
-        self.send_bit = send_bit
+        self.message = message
+        self.message_length = message_length
 
         # Find what nodes are next and prev based on the node_names list
         node_index = node_names.index(node_name)
@@ -49,10 +51,18 @@ class AnonymousTransmissionProgram(Program):
         # Initialize next and prev sockets using the provided context
         self.setup_next_and_prev_sockets(context)
 
-        # Run the anonymous transmission protocol and retrieve the received bit
-        received_bit = yield from self.anonymous_transmit_bit(context, self.send_bit)
+        received_message = ""
 
-        print(f"{self.node_name} has received the bit: {received_bit}")
+        for i in range(self.message_length):
+            if self.message is not None:
+                send_bit = bool(int(self.message[i]))
+            else:
+                send_bit = None
+            # Run the anonymous transmission protocol and retrieve the received bit
+            received_bit = yield from self.anonymous_transmit_bit(context, send_bit)
+            received_message = received_message + str(int(received_bit))
+
+        print(f"{self.node_name} has received the bit: {received_message}")
         return {}
 
     def anonymous_transmit_bit(self, context: ProgramContext, send_bit: bool = None) -> Generator[None, None, bool]:
@@ -63,10 +73,61 @@ class AnonymousTransmissionProgram(Program):
         :param send_bit: Bit to be sent by the sender node; receivers should leave this as None.
         :return: The bit received through the protocol, or the sent bit if this node is the sender.
         """
-        # Placeholder for the anonymous transmission protocol logic, put your code here.
-        # This code makes the current code runnable; replace it with your actual protocol steps.
+
+        qubit, m_ghz = yield from create_ghz(context.connection,
+                                             self.prev_epr_socket,
+                                             self.next_epr_socket,
+                                             self.prev_socket,
+                                             self.next_socket,
+                                             True)
+
+        if send_bit == 1:
+            qubit.Z()
+
+        qubit.H()
+        m = qubit.measure()
+
         yield from context.connection.flush()
-        return False
+
+        if self.node_name == "Alice":
+            self.next_socket.send(str(int(m)))
+            yield from context.connection.flush()
+
+        if self.node_name in ["Bob", "Charlie"]:
+            m_prev = yield from self.prev_socket.recv()
+            yield from context.connection.flush()
+            self.next_socket.send(m_prev + str(int(m)))
+            yield from context.connection.flush()
+
+        if self.node_name == "David":
+            m_prev = yield from self.prev_socket.recv()
+            yield from context.connection.flush()
+            m_final = m_prev + str(int(m))
+
+            sum = 0
+            for x in m_final:
+                sum = sum + int(x)
+
+            sent_bit = sum % 2
+
+            self.prev_socket.send(str(sent_bit) + ',' + m_final)
+            yield from context.connection.flush()
+
+        if self.node_name in ["Bob", "Charlie"]:
+            res = yield from self.next_socket.recv()
+            yield from context.connection.flush()
+            self.prev_socket.send(res)
+            yield from context.connection.flush()
+
+            sent_bit = int(res[0])
+
+        if self.node_name == "Alice":
+            res = yield from self.next_socket.recv()
+            yield from context.connection.flush()
+
+            sent_bit = send_bit
+
+        return bool(sent_bit)
 
     def broadcast_message(self, context: ProgramContext, message: str):
         """Broadcasts a message to all nodes in the network."""
