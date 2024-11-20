@@ -3,12 +3,15 @@ from typing import Optional, Generator
 
 from squidasm.sim.stack.program import Program, ProgramContext, ProgramMeta
 from squidasm.util.routines import create_ghz
+from netsquid.util.simtools import sim_time
 from netqasm.sdk.classical_communication.socket import Socket
 from netqasm.sdk.epr_socket import EPRSocket
 
+from utils import hamming_weight
+
 
 class AnonymousTransmissionProgram(Program):
-    def __init__(self, node_name: str, node_names: list, message: str = None, message_length: int = 1):
+    def __init__(self, node_name: str, node_names: list, message: str = None, message_length: int = 1, num_repetitions: int = 1):
         """
         Initializes the AnonymousTransmissionProgram.
 
@@ -19,6 +22,7 @@ class AnonymousTransmissionProgram(Program):
         self.node_name = node_name
         self.message = message
         self.message_length = message_length
+        self.num_repetitions = num_repetitions
 
         # Find what nodes are next and prev based on the node_names list
         node_index = node_names.index(node_name)
@@ -59,11 +63,20 @@ class AnonymousTransmissionProgram(Program):
             else:
                 send_bit = None
             # Run the anonymous transmission protocol and retrieve the received bit
-            received_bit = yield from self.anonymous_transmit_bit(context, send_bit)
-            received_message = received_message + str(int(received_bit))
+            received_bits = ""
+            for ii in range(self.num_repetitions):
+                received_bit = yield from self.anonymous_transmit_bit(context, send_bit)
+                received_bits = received_bits + str(int(received_bit))
 
-        print(f"{self.node_name} has received the bit: {received_message}")
-        return {}
+            if hamming_weight(received_bits) > self.num_repetitions / 2:
+                corrected_bit = 1
+            else:
+                corrected_bit = 0
+
+            received_message = received_message + str(int(corrected_bit))
+
+        # print(f"{self.node_name} has received the bit: {received_message}")
+        return {"msg": received_message, "runtime": sim_time()}
 
     def anonymous_transmit_bit(self, context: ProgramContext, send_bit: bool = None) -> Generator[None, None, bool]:
         """
@@ -104,11 +117,7 @@ class AnonymousTransmissionProgram(Program):
             yield from context.connection.flush()
             m_final = m_prev + str(int(m))
 
-            sum = 0
-            for x in m_final:
-                sum = sum + int(x)
-
-            sent_bit = sum % 2
+            sent_bit = hamming_weight(m_final) % 2
 
             self.prev_socket.send(str(sent_bit) + ',' + m_final)
             yield from context.connection.flush()
